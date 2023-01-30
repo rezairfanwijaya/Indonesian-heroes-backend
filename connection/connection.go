@@ -2,6 +2,7 @@ package connection
 
 import (
 	"fmt"
+	"indonesian-heroes/hero"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -22,6 +23,10 @@ func NewConnection(env map[string]string) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	return db, nil
+	// migrate schema
+	if err := db.AutoMigrate(&hero.Hero{}); err != nil {
+		return db, err
+	}
 
+	return db, nil
 }

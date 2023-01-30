@@ -2,8 +2,12 @@ package main
 
 import (
 	"indonesian-heroes/connection"
+	"indonesian-heroes/handler"
+	"indonesian-heroes/hero"
 	"log"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -28,5 +32,14 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	log.Println(connection)
+	repo := hero.NewRepository(connection)
+	service := hero.NewService(repo)
+	handler := handler.NewHeroHandler(service)
+
+	// init server
+	r := gin.Default()
+
+	r.GET("/heros", handler.GetAllHero)
+
+	r.Run(":7575")
 }
