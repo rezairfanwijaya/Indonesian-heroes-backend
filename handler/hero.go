@@ -43,3 +43,30 @@ func (h *heroHandler) GetAllHero(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *heroHandler) GetHerosByAge(c *gin.Context) {
+	age := c.Param("age")
+	heros, totalData, err := h.heroService.GetByAge(age)
+	if err != nil {
+		response := helper.ResponseAPIFormat(
+			"failed",
+			err.Error(),
+			http.StatusInternalServerError,
+			totalData,
+			heros,
+		)
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := helper.ResponseAPIFormat(
+		"success",
+		"success get data",
+		http.StatusOK,
+		totalData,
+		heros,
+	)
+
+	c.JSON(http.StatusOK, response)
+}

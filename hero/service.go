@@ -2,6 +2,7 @@ package hero
 
 import (
 	"encoding/json"
+	"fmt"
 	"indonesian-heroes/helper"
 	"io/ioutil"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 type IService interface {
 	GetAll() ([]Hero, int, error)
+	GetByAge(age string) ([]Hero, int, error)
 }
 
 type service struct {
@@ -78,6 +80,21 @@ func (s *service) GetAll() ([]Hero, int, error) {
 	heros, err := s.repoHero.FindAll()
 	if err != nil {
 		return heros, totalData, err
+	}
+
+	return heros, totalData, nil
+}
+
+func (s *service) GetByAge(age string) ([]Hero, int, error) {
+	heros, err := s.repoHero.FindByAge(age)
+	if err != nil {
+		return heros, 0, err
+	}
+
+	// cek apakah ada data
+	totalData := len(heros)
+	if totalData == 0 {
+		return heros, 0, fmt.Errorf("data tidak ditemukan")
 	}
 
 	return heros, totalData, nil

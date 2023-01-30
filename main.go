@@ -40,6 +40,7 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/heros", handler.GetAllHero)
+	r.GET("/heros/:age", handler.GetHerosByAge)
 
 	r.Run(":7575")
 }
