@@ -11,9 +11,10 @@ type formatResponseAPI struct {
 }
 
 type meta struct {
-	Status  string `json:"status"`
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Status    string `json:"status"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	TotalData int    `json:"total_data"`
 }
 
 func ChangeFromInterface(data interface{}) (result int) {
@@ -32,12 +33,13 @@ func ChangeFromInterface(data interface{}) (result int) {
 	return result
 }
 
-func ResponseAPIFormat(status, message string, code int, data interface{}) formatResponseAPI {
+func ResponseAPIFormat(status, message string, code, totalData int, data interface{}) formatResponseAPI {
 	result := formatResponseAPI{
 		Meta: meta{
-			Status:  status,
-			Code:    code,
-			Message: message,
+			Status:    status,
+			Code:      code,
+			Message:   message,
+			TotalData: totalData,
 		},
 		Data: data,
 	}

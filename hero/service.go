@@ -9,7 +9,7 @@ import (
 )
 
 type IService interface {
-	GetAll() ([]Hero, error)
+	GetAll() ([]Hero, int, error)
 }
 
 type service struct {
@@ -24,27 +24,29 @@ func NewService(repoHero IRepository) *service {
 	}
 }
 
-func (s *service) GetAll() ([]Hero, error) {
+func (s *service) GetAll() ([]Hero, int, error) {
 	// cek apakah sudah ada data atau belum
 	allHero, err := s.repoHero.FindAll()
 	if err != nil {
-		return allHero, err
+		return allHero, 0, err
 	}
 
-	if len(allHero) == 0 {
+	totalData := len(allHero)
+
+	if totalData == 0 {
 		response, err := http.Get(URL)
 		if err != nil {
-			return []Hero{}, err
+			return []Hero{}, totalData, err
 		}
 
 		respByte, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			return []Hero{}, err
+			return []Hero{}, totalData, err
 		}
 
 		var respHero HeroFromAPI
 		if err := json.Unmarshal(respByte, &respHero.Data); err != nil {
-			return []Hero{}, err
+			return []Hero{}, totalData, err
 		}
 
 		var hero Hero
@@ -75,8 +77,8 @@ func (s *service) GetAll() ([]Hero, error) {
 	// get all data
 	heros, err := s.repoHero.FindAll()
 	if err != nil {
-		return heros, err
+		return heros, totalData, err
 	}
 
-	return heros, nil
+	return heros, totalData, nil
 }

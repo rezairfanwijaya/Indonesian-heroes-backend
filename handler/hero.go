@@ -19,12 +19,13 @@ func NewHeroHandler(heroService hero.IService) *heroHandler {
 }
 
 func (h *heroHandler) GetAllHero(c *gin.Context) {
-	heros, err := h.heroService.GetAll()
+	heros, totalData, err := h.heroService.GetAll()
 	if err != nil {
 		response := helper.ResponseAPIFormat(
 			"failed",
 			err.Error(),
 			http.StatusInternalServerError,
+			totalData,
 			heros,
 		)
 
@@ -36,6 +37,7 @@ func (h *heroHandler) GetAllHero(c *gin.Context) {
 		"success",
 		"success get all data",
 		http.StatusOK,
+		totalData,
 		heros,
 	)
 
