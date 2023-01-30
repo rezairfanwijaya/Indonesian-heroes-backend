@@ -41,6 +41,7 @@ func main() {
 
 	r.GET("/heros", handler.GetAllHero)
 	r.GET("/heros/:age", handler.GetHerosByAge)
+	r.GET("/hero/:name", handler.GetHeroByName)
 
 	r.Run(":7575")
 }

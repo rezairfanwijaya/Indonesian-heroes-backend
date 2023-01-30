@@ -5,7 +5,8 @@ import "gorm.io/gorm"
 type IRepository interface {
 	Save(hero Hero) (Hero, error)
 	FindAll() ([]Hero, error)
-	FindByAge(age string)([]Hero,error)
+	FindByAge(age string) ([]Hero, error)
+	FindByName(name string) ([]Hero, error)
 }
 
 type repository struct {
@@ -35,11 +36,20 @@ func (r *repository) FindAll() ([]Hero, error) {
 	return heroes, nil
 }
 
-func (r *repository)FindByAge(age string)([]Hero,error){
+func (r *repository) FindByAge(age string) ([]Hero, error) {
 	var heroes []Hero
-    if err := r.db.Where("age =?",age).Find(&heroes).Error; err!= nil {
-        return heroes, err
-    }
+	if err := r.db.Where("age = ?", age).Find(&heroes).Error; err != nil {
+		return heroes, err
+	}
 
-    return heroes, nil
+	return heroes, nil
+}
+
+func (r *repository) FindByName(name string) ([]Hero, error) {
+	var heroes []Hero
+	if err := r.db.Where("name LIKE ?", "%"+name+"%").Find(&heroes).Error; err != nil {
+		return heroes, err
+	}
+
+	return heroes, nil
 }

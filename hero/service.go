@@ -12,6 +12,7 @@ import (
 type IService interface {
 	GetAll() ([]Hero, int, error)
 	GetByAge(age string) ([]Hero, int, error)
+	GetByName(name string) ([]Hero, int, error)
 }
 
 type service struct {
@@ -93,6 +94,22 @@ func (s *service) GetByAge(age string) ([]Hero, int, error) {
 
 	// cek apakah ada data
 	totalData := len(heros)
+	if totalData == 0 {
+		return heros, 0, fmt.Errorf("data tidak ditemukan")
+	}
+
+	return heros, totalData, nil
+}
+
+func (s *service) GetByName(name string) ([]Hero, int, error) {
+	heros, err := s.repoHero.FindByName(name)
+	if err != nil {
+		return heros, 0, err
+	}
+
+	// cek apakah ada data
+	totalData := len(heros)
+
 	if totalData == 0 {
 		return heros, 0, fmt.Errorf("data tidak ditemukan")
 	}
